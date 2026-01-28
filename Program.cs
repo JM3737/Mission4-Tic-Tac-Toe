@@ -9,32 +9,40 @@ class Program
         Console.WriteLine("Player 1 is X, Player 2 is O.");
         Console.WriteLine("Choose a number 1-9 to place your mark.\n");
 
-        // Create and initialize the game board
-        char[] board = new char[9];
-        for (int i = 0; i < board.Length; i++)
+        // Create and initialize the game board (2D board to match Support methods)
+        char[,] board = new char[3, 3];
+        int counter = 1;
+        for (int r = 0; r < 3; r++)
         {
-            board[i] = (char)('1' + i);
+            for (int c = 0; c < 3; c++)
+            {
+                board[r, c] = (char)('0' + counter);
+                counter++;
+            }
         }
 
         char currentPlayer = 'X';
         int movesMade = 0;
+        Support support = new Support();
 
         // Print starting board
-        Support.printBoard(board);
+        support.printBoard(board);
 
         while (true)
         {
             int index = GetValidMove(board, currentPlayer);
 
             // Update the board
-            board[index] = currentPlayer;
+            int row = index / 3;
+            int col = index % 3;
+            board[row, col] = currentPlayer;
             movesMade++;
 
             // Print updated board
-            Support.printBoard(board);
+            support.printBoard(board);
 
             // Check for winner
-            char winner = Support.checkWinner(board);
+            char winner = support.checkWinner(board);
             if (winner == 'X' || winner == 'O')
             {
                 string playerName = (winner == 'X') ? "Player 1 (X)" : "Player 2 (O)";
@@ -56,12 +64,12 @@ class Program
         Console.WriteLine("\nThanks for playing!");
     }
 
-    static int GetValidMove(char[] board, char currentPlayer)
+    static int GetValidMove(char[,] board, char currentPlayer)
     {
         while (true)
         {
             Console.Write($"\nPlayer {currentPlayer}, enter a spot (1-9): ");
-            string input = Console.ReadLine();
+            string? input = Console.ReadLine();
 
             if (!int.TryParse(input, out int spot))
             {
@@ -76,8 +84,10 @@ class Program
             }
 
             int index = spot - 1;
+            int row = index / 3;
+            int col = index % 3;
 
-            if (board[index] == 'X' || board[index] == 'O')
+            if (board[row, col] == 'X' || board[row, col] == 'O')
             {
                 Console.WriteLine("That spot is already taken. Try again.");
                 continue;
