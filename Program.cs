@@ -26,7 +26,7 @@ class Program
         {
             int index = GetValidMove(board, currentPlayer);
 
-            // Update board
+            // Update the board
             board[index] = currentPlayer;
             movesMade++;
 
